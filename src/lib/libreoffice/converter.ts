@@ -27,7 +27,7 @@
  */
 
 import { WorkerBrowserConverter } from '@matbee/libreoffice-converter/browser';
-import { fetchAssembledBlob } from './chunk-loader';
+import { fetchAssembledBlob } from '../utils/asset-loader';
 
 const LIBREOFFICE_PATH = '/libreoffice-wasm/';
 const ASSET_VERSION = '20240212-3';

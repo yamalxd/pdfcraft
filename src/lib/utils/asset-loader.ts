@@ -1,7 +1,7 @@
 /**
- * src/lib/libreoffice/chunk-loader.ts
+ * src/lib/utils/asset-loader.ts
  * 
- * Utility to fetch and reassemble chunked assets.
+ * General-purpose utility to fetch and reassemble chunked assets.
  * Used to bypass 25MB file size limits on platforms like Cloudflare Pages.
  */
 
@@ -18,20 +18,20 @@ interface ChunkManifest {
  * @returns A Blob containing the reassembled or directly fetched asset
  */
 export async function fetchAssembledBlob(url: string): Promise<Blob> {
+    // Determine the manifest URL by stripping query parameters and appending .manifest.json
     const [baseUrl, query] = url.split('?');
     const queryString = query ? `?${query}` : '';
-    
-    // 1. Try to fetch the manifest
     const manifestUrl = `${baseUrl}.manifest.json${queryString}`;
     
     try {
+        // Attempt to fetch the manifest
         const manifestRes = await fetch(manifestUrl);
         
         if (manifestRes.ok) {
             const manifest: ChunkManifest = await manifestRes.json();
-            console.log(`[chunk-loader] manifest found for ${manifest.filename}. Reassembling from ${manifest.chunks} chunks...`);
+            console.log(`[asset-loader] Manifest found for ${manifest.filename}. Reassembling from ${manifest.chunks} chunks...`);
 
-            // 2. Fetch all chunks in parallel
+            // Fetch all chunks in parallel
             const chunkPromises: Promise<ArrayBuffer>[] = [];
             for (let i = 0; i < manifest.chunks; i++) {
                 const chunkUrl = `${baseUrl}.part_${i}${queryString}`;
@@ -45,7 +45,7 @@ export async function fetchAssembledBlob(url: string): Promise<Blob> {
 
             const chunks = await Promise.all(chunkPromises);
 
-            // 3. Assemble chunks
+            // Assemble chunks into a single buffer
             const assembled = new Uint8Array(manifest.totalSize);
             let offset = 0;
             for (const chunk of chunks) {
@@ -55,13 +55,18 @@ export async function fetchAssembledBlob(url: string): Promise<Blob> {
 
             // Determine MIME type based on extension
             let mimeType = 'application/octet-stream';
-            if (url.endsWith('.wasm')) mimeType = 'application/wasm';
-            else if (url.endsWith('.js')) mimeType = 'application/javascript';
+            const lowerUrl = url.toLowerCase();
+            if (lowerUrl.includes('.wasm')) mimeType = 'application/wasm';
+            else if (lowerUrl.includes('.js')) mimeType = 'application/javascript';
+            else if (lowerUrl.includes('.ttf')) mimeType = 'font/ttf';
+            else if (lowerUrl.includes('.otf')) mimeType = 'font/otf';
+            else if (lowerUrl.includes('.woff2')) mimeType = 'font/woff2';
 
             return new Blob([assembled], { type: mimeType });
         }
     } catch (err) {
-        console.warn(`[chunk-loader] Error reassembling ${url}, falling back to direct fetch:`, err);
+        // Fallback to direct fetch on any error
+        console.debug(`[asset-loader] Manifest check failed or skipped for ${url}:`, err);
     }
 
     // Fallback: Fetch the file directly
