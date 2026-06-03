@@ -68,7 +68,7 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
             const buttons = customToolbar.querySelectorAll('li, button');
             buttons.forEach((btn: Element) => {
               const text = btn.textContent?.trim();
-              if (text === '保存' || text === 'Save') {
+              if (text === '\u4fdd\u5b58' || text === 'Save') {
                 (btn as HTMLElement).style.display = 'none';
               }
             });
@@ -84,16 +84,16 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
               let isDoingUndoRedo = false;
 
               const toolNameTranslations = {
-                'cloud': '云线',
-                'rectangle': '矩形',
-                'circle': '圆形',
-                'arrow': '箭头',
-                'freehand': '自由绘制',
-                'freeText': '文字',
-                'freeHighlight': '自由高亮',
-                'note': '注解',
-                'signature': '签名',
-                'stamp': '盖章'
+                'cloud': '${t('editPdf.annCloud')}',
+                'rectangle': '${t('editPdf.annRectangle')}',
+                'circle': '${t('editPdf.annCircle')}',
+                'arrow': '${t('editPdf.annArrow')}',
+                'freehand': '${t('editPdf.annFreehand')}',
+                'freeText': '${t('editPdf.annFreeText')}',
+                'freeHighlight': '${t('editPdf.annFreeHighlight')}',
+                'note': '${t('editPdf.annNote')}',
+                'signature': '${t('editPdf.annSignature')}',
+                'stamp': '${t('editPdf.annStamp')}'
               };
 
               const initInterval = setInterval(() => {
@@ -104,8 +104,138 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
                   setupCloudFix();
                   setupColorPickerAndStroke();
                   setupUndoRedoAndAuthorPatch();
+                  setupSnapping();
+                  setupChineseFontPatch();
                 }
               }, 200);
+
+              function setupSnapping() {
+                const ext = window.pdfjsAnnotationExtensionInstance;
+                const stage = ext?.stage || ext?.konvaStage || (window.Konva && window.Konva.stages[0]);
+                if (!stage) return;
+                
+                console.log('[PDFCraft Patch] Setting up Konva Snapping Alignment...');
+                
+                stage.on('dragmove', function(e) {
+                  const activeShape = e.target;
+                  if (!activeShape || activeShape === stage) return;
+                  
+                  const shapes = stage.find('.annotation') || stage.find('Group') || stage.getChildren();
+                  const snapOffset = 8;
+                  let snapX = null;
+                  let snapY = null;
+                  
+                  const activeBox = activeShape.getClientRect();
+                  if (!activeBox) return;
+
+                  shapes.forEach(shape => {
+                    if (shape === activeShape || shape.name() === 'guideline') return;
+                    const box = shape.getClientRect();
+                    if (!box) return;
+                    
+                    // X-axis alignment
+                    if (Math.abs(activeBox.x - box.x) < snapOffset) snapX = box.x;
+                    if (Math.abs((activeBox.x + activeBox.width/2) - (box.x + box.width/2)) < snapOffset) {
+                      snapX = box.x + box.width/2 - activeBox.width/2;
+                    }
+                    if (Math.abs((activeBox.x + activeBox.width) - (box.x + box.width)) < snapOffset) {
+                      snapX = box.x + box.width - activeBox.width;
+                    }
+                    
+                    // Y-axis alignment
+                    if (Math.abs(activeBox.y - box.y) < snapOffset) snapY = box.y;
+                    if (Math.abs((activeBox.y + activeBox.height/2) - (box.y + box.height/2)) < snapOffset) {
+                      snapY = box.y + box.height/2 - activeBox.height/2;
+                    }
+                    if (Math.abs((activeBox.y + activeBox.height) - (box.y + box.height)) < snapOffset) {
+                      snapY = box.y + box.height - activeBox.height;
+                    }
+                  });
+                  
+                  // Snap coordinates
+                  if (snapX !== null) activeShape.x(snapX);
+                  if (snapY !== null) activeShape.y(snapY);
+                  
+                  // Render red guide dashed lines as DOM overlays
+                  drawGuides(stage, snapX, snapY);
+                });
+                
+                stage.on('dragend', function() {
+                  clearGuides();
+                });
+                
+                function drawGuides(stg, sx, sy) {
+                  let container = document.getElementById('pdfcraft-alignment-guides');
+                  if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'pdfcraft-alignment-guides';
+                    container.style.cssText = 'position:absolute; inset:0; pointer-events:none; z-index:99999;';
+                    stg.container().appendChild(container);
+                  }
+                  container.innerHTML = '';
+                  
+                  if (sx !== null) {
+                    const l = document.createElement('div');
+                    l.style.cssText = 'position:absolute; left:' + sx + 'px; top:0; bottom:0; border-left:1.5px dashed red;';
+                    container.appendChild(l);
+                  }
+                  if (sy !== null) {
+                    const l = document.createElement('div');
+                    l.style.cssText = 'position:absolute; top:' + sy + 'px; left:0; right:0; border-top:1.5px dashed red;';
+                    container.appendChild(l);
+                  }
+                }
+                
+                function clearGuides() {
+                  const container = document.getElementById('pdfcraft-alignment-guides');
+                  if (container) container.innerHTML = '';
+                }
+              }
+
+              function setupChineseFontPatch() {
+                const ext = window.pdfjsAnnotationExtensionInstance;
+                const pdfLib = window.pdfLib || ext?.pdfLib;
+                if (!pdfLib) return;
+
+                const originalSave = pdfLib.PDFDocument.prototype.save;
+                pdfLib.PDFDocument.prototype.save = async function(saveOptions) {
+                  console.log('[PDFCraft Patch] Intercepting save to inspect for Chinese text...');
+                  
+                  let hasChinese = false;
+                  
+                  // Inspect the annotation store inside PDFJS Annotation Extension
+                  const store = window.pdfjsAnnotationExtensionInstance?.getAnnotationStore();
+                  if (store && store.annotations) {
+                    store.annotations.forEach(ann => {
+                      if (ann.name === 'freeText' && /[\u4e00-\u9fa5]/.test(ann.text || '')) {
+                        hasChinese = true;
+                      }
+                    });
+                  }
+
+                  if (hasChinese) {
+                    try {
+                      console.log('[PDFCraft Patch] Chinese text found. Embedding NotoSansSC-Regular font...');
+                      const fontBytes = await fetch('/fonts/NotoSansSC-Regular.ttf').then(res => res.arrayBuffer());
+                      const customFont = await this.embedFont(fontBytes, { subset: true });
+                      
+                      // Intercept subsequent font loading requests for Helvetica inside pdf-lib
+                      const originalEmbedFont = this.embedFont;
+                      this.embedFont = async function(fontToEmbed, embedOpts) {
+                        if (fontToEmbed === pdfLib.StandardFonts.Helvetica || fontToEmbed === 'Helvetica') {
+                          console.log('[PDFCraft Patch] Redirected Helvetica embed to NotoSansSC font');
+                          return customFont;
+                        }
+                        return originalEmbedFont.call(this, fontToEmbed, embedOpts);
+                      };
+                    } catch (e) {
+                      console.error('[PDFCraft Patch] Failed to embed Chinese font subset', e);
+                    }
+                  }
+
+                  return originalSave.call(this, saveOptions);
+                };
+              }
 
               function setupCloudFix() {
                 // Ensure double-click bypasses text layer blocking to complete drawing
@@ -204,7 +334,7 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
                 colorRow.style.cssText = 'display:flex; align-items:center; justify-content:space-between; gap:8px;';
                 
                 const colorLabel = document.createElement('span');
-                colorLabel.textContent = '自定义描边色:';
+                {t('editPdf.strokeColorLabel')}
                 
                 const colorPicker = document.createElement('input');
                 colorPicker.type = 'color';
@@ -248,7 +378,7 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
                   
                   const fillLabel = document.createElement('label');
                   fillLabel.htmlFor = 'pdfcraft-fill-enabled';
-                  fillLabel.textContent = '启用填充色:';
+                  {t('editPdf.fillColorLabel')}
                   fillLabel.style.cssText = 'cursor:pointer; user-select:none;';
 
                   leftPart.appendChild(fillCheckbox);
@@ -316,9 +446,9 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
                   let authorUpdated = false;
                   if (store && store.annotations) {
                     store.annotations.forEach(ann => {
-                      const transName = toolNameTranslations[ann.name] || '标注';
-                      const targetAuthor = transName + ' (不具名用户)';
-                      if (ann.author !== targetAuthor && ann.author === '不具名用户') {
+                      const transName = toolNameTranslations[ann.name] || '${t('editPdf.annDefault')}';
+                      const targetAuthor = transName + ' (${t('editPdf.unnamedUser')})';
+                      if (ann.author !== targetAuthor && ann.author === '${t('editPdf.unnamedUser')}') {
                         ann.author = targetAuthor;
                         authorUpdated = true;
                       }
@@ -395,7 +525,7 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
 
                   const undoBtn = document.createElement('button');
                   undoBtn.type = 'button';
-                  undoBtn.innerHTML = '<span style="margin-right:2px; font-weight:bold;">↩</span>撤销';
+                  undoBtn.innerHTML = '<span style="margin-right:2px; font-weight:bold;">↩</span>${t('editPdf.undo')}';
                   undoBtn.className = 'toolbarButton';
                   undoBtn.style.cssText = 'padding:4px 8px; font-size:12px; cursor:pointer; border-radius:4px; opacity:0.5; border:1px solid var(--toolbar-border-color, #ccc); background-color:var(--toolbar-bg-color, #f5f5f5); color:var(--toolbar-fg-color, #333); font-family:inherit;';
                   undoBtn.disabled = true;
@@ -408,7 +538,7 @@ export function EditPDFTool({ className = '' }: EditPDFToolProps) {
 
                   const redoBtn = document.createElement('button');
                   redoBtn.type = 'button';
-                  redoBtn.innerHTML = '<span style="margin-right:2px; font-weight:bold;">↪</span>重做';
+                  redoBtn.innerHTML = '<span style="margin-right:2px; font-weight:bold;">↪</span>${t('editPdf.redo')}';
                   redoBtn.className = 'toolbarButton';
                   redoBtn.style.cssText = 'padding:4px 8px; font-size:12px; cursor:pointer; border-radius:4px; opacity:0.5; border:1px solid var(--toolbar-border-color, #ccc); background-color:var(--toolbar-bg-color, #f5f5f5); color:var(--toolbar-fg-color, #333); font-family:inherit;';
                   redoBtn.disabled = true;
