@@ -41,7 +41,11 @@ import { WorkflowLibrary } from './WorkflowLibrary';
 import { WorkflowControls } from './WorkflowControls';
 import { NodeSettingsPanel } from './NodeSettingsPanel';
 import { WorkflowPreview } from './WorkflowPreview';
+import { WORKFLOW_TOOL_DROP_EVENT, type WorkflowToolDropEventDetail } from './dragEvents';
 import { Undo2, Redo2, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
+
+// Global drag data cache for WebView2/Tauri compatibility
+let globalDragData: ToolNodeData | null = null;
 
 // Node types for ReactFlow
 const nodeTypes = {
@@ -106,6 +110,7 @@ function WorkflowEditorContent() {
 
     // AbortController for cancelling workflow execution
     const executionAbortController = useRef<AbortController | null>(null);
+    const lastToolDropRef = useRef<{ toolId: string; clientX: number; clientY: number; time: number } | null>(null);
 
     /**
      * Register a Blob URL for cleanup
@@ -272,49 +277,106 @@ function WorkflowEditorContent() {
      * Handle drag over for dropping new nodes
      */
     const onDragOver = useCallback((event: React.DragEvent) => {
+        // Always allow drop in Tauri/WebView2 environment where dataTransfer may be restricted
         event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'move';
+        }
     }, []);
 
     /**
      * Handle dropping a tool node onto the canvas
      */
+    const addToolNodeAtClientPosition = useCallback((nodeData: ToolNodeData, clientX: number, clientY: number) => {
+        if (!reactFlowWrapper.current || !reactFlowInstance) return;
+
+        const position = reactFlowInstance.screenToFlowPosition({
+            x: clientX,
+            y: clientY,
+        });
+
+        const newNode: Node<ToolNodeData> = {
+            id: getNodeId(),
+            type: 'toolNode',
+            position,
+            data: { ...nodeData, settings: {} },
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+        lastToolDropRef.current = {
+            toolId: nodeData.toolId,
+            clientX,
+            clientY,
+            time: Date.now(),
+        };
+    }, [reactFlowInstance, setNodes]);
+
     const onDrop = useCallback(
         (event: React.DragEvent) => {
             event.preventDefault();
 
             if (!reactFlowWrapper.current || !reactFlowInstance) return;
 
-            const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-            const nodeDataStr = event.dataTransfer.getData('application/reactflow');
+            // Try to resolve nodeData from global variable first, fallback to dataTransfer for WebView2 compatibility
+            let nodeData: ToolNodeData | null = globalDragData;
+            if (!nodeData) {
+                const nodeDataStr = event.dataTransfer.getData('application/reactflow');
+                if (nodeDataStr) {
+                    try {
+                        nodeData = JSON.parse(nodeDataStr);
+                    } catch (e) {
+                        logger.error('Failed to parse reactflow drag data:', e);
+                    }
+                }
+            }
 
-            if (!nodeDataStr) return;
+            // Always reset the global drag data cache
+            globalDragData = null;
 
-            const nodeData: ToolNodeData = JSON.parse(nodeDataStr);
+            if (!nodeData) return;
 
-            const position = reactFlowInstance.screenToFlowPosition({
-                x: event.clientX,
-                y: event.clientY,
-            });
-
-            const newNode: Node<ToolNodeData> = {
-                id: getNodeId(),
-                type: 'toolNode',
-                position,
-                data: { ...nodeData, settings: {} },
-            };
-
-            setNodes((nds) => nds.concat(newNode));
+            addToolNodeAtClientPosition(nodeData, event.clientX, event.clientY);
         },
-        [reactFlowInstance, setNodes]
+        [reactFlowInstance, addToolNodeAtClientPosition]
     );
+
+    useEffect(() => {
+        const handleFallbackToolDrop = (event: Event) => {
+            const { nodeData, clientX, clientY } = (event as CustomEvent<WorkflowToolDropEventDetail>).detail;
+            if (!nodeData) return;
+
+            const lastDrop = lastToolDropRef.current;
+            const isDuplicateNativeDrop = lastDrop &&
+                lastDrop.toolId === nodeData.toolId &&
+                Math.abs(lastDrop.clientX - clientX) < 8 &&
+                Math.abs(lastDrop.clientY - clientY) < 8 &&
+                Date.now() - lastDrop.time < 500;
+
+            if (isDuplicateNativeDrop) return;
+
+            addToolNodeAtClientPosition(nodeData, clientX, clientY);
+        };
+
+        window.addEventListener(WORKFLOW_TOOL_DROP_EVENT, handleFallbackToolDrop);
+        return () => window.removeEventListener(WORKFLOW_TOOL_DROP_EVENT, handleFallbackToolDrop);
+    }, [addToolNodeAtClientPosition]);
 
     /**
      * Handle drag start from sidebar
      */
     const onDragStart = useCallback((event: React.DragEvent, nodeData: ToolNodeData) => {
+        globalDragData = nodeData;
         event.dataTransfer.setData('application/reactflow', JSON.stringify(nodeData));
+        // Add standard plain text format fallback to ensure drop action gets activated under WebView2/Tauri
+        event.dataTransfer.setData('text/plain', nodeData.toolId);
         event.dataTransfer.effectAllowed = 'move';
+    }, []);
+
+    /**
+     * Handle drag end to clean up global drag data
+     */
+    const onDragEnd = useCallback(() => {
+        globalDragData = null;
     }, []);
 
     /**
@@ -942,6 +1004,7 @@ function WorkflowEditorContent() {
             {/* Left Sidebar - Tool Library */}
             <ToolSidebar
                 onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
                 isCollapsed={isLeftSidebarCollapsed}
                 onToggleCollapse={() => setIsLeftSidebarCollapsed(!isLeftSidebarCollapsed)}
             />
@@ -969,7 +1032,12 @@ function WorkflowEditorContent() {
                 </div>
 
                 {/* Canvas */}
-                <div className="flex-1 relative" ref={reactFlowWrapper}>
+                <div 
+                    className="flex-1 relative" 
+                    ref={reactFlowWrapper}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
+                >
                     {/* Undo/Redo buttons */}
                     <div className="absolute top-2 left-2 z-10 flex gap-1">
                         <button
