@@ -79,7 +79,7 @@ export const tools: Tool[] = [
     outputFormat: 'pdf',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     maxFiles: 1,
-    features: ['annotate', 'highlight', 'redact', 'comment', 'shapes', 'images', 'search'],
+    features: ['edit-existing-text', 'annotate', 'highlight', 'redact', 'comment', 'shapes', 'images', 'search'],
     relatedTools: ['sign-pdf', 'add-watermark', 'form-filler'],
   },
   {
@@ -711,7 +711,7 @@ export const tools: Tool[] = [
     slug: 'ocr-pdf',
     icon: 'scan-text',
     category: 'organize-manage',
-    acceptedFormats: ['.pdf'],
+    acceptedFormats: ['.pdf', '.png', '.jpg', '.jpeg', '.webp'],
     outputFormat: 'pdf',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     maxFiles: 1,

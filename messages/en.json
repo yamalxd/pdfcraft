@@ -634,7 +634,8 @@
       "redoBtn": "Redo",
       "unnamedUser": "Guest User",
       "undo": "Undo",
-      "redo": "Redo"
+      "redo": "Redo",
+      "annDefault": "Annotation"
     },
     "einkOptimizer": {
       "otsueThresholdSuffix": " (Otsu Offset)",
@@ -672,6 +673,20 @@
       "outputFormat": "Output File Format",
       "formatSearchablePdf": "Double-Layer Searchable PDF",
       "formatText": "Extract Plain Text File (.txt)",
+      "formatMarkdown": "Structured Markdown (.md)",
+      "formatJson": "Structured JSON (.json)",
+      "enhanceContrast": "Smart Image Quality Enhancement",
+      "enhanceContrastDesc": "Auto-enhances contrast and sharpens edges for faint ink and dark scans",
+      "copyText": "Copy Recognized Text",
+      "copied": "Copied to clipboard!",
+      "openInEditor": "Edit in PDF Editor",
+      "openInEditorDesc": "Directly edit text and layout in PDFCraft Editor without downloading",
+      "statsPages": "Pages",
+      "statsWords": "Words",
+      "statsChars": "Characters",
+      "statsConfidence": "Avg Confidence",
+      "tabText": "Text Preview",
+      "tabJson": "JSON Structure",
       "accuracyTitle": "OCR Engine Accuracy Resolution",
       "accuracySd": "Standard (Fast, clear documents)",
       "accuracyHd": "High Quality (Recommended, standard scans)",
@@ -1173,7 +1188,8 @@
     "invalidOptions": "Invalid options provided.",
     "unknown": "An unexpected error occurred. Please try again.",
     "toolNotFound": "Tool Not Found",
-    "invalidPassword": "The password you entered is incorrect. Please check and try again."
+    "invalidPassword": "The password you entered is incorrect. Please check and try again.",
+    "incorrectPassword": "Incorrect password. Please try again."
   },
   "home": {
     "hero": {
@@ -1755,6 +1771,14 @@
       "saveError": "Failed to save PDF. Please use the export button in the toolbar.",
       "savingMessage": "Saving PDF with annotations...",
       "successMessage": "PDF saved successfully! Click the download button to save your edited file.",
+      "textHistory": "Text change history",
+      "textUndo": "Undo text",
+      "textRedo": "Redo text",
+      "textUndoApplied": "The last text change was undone.",
+      "textRedoApplied": "The text change was redone.",
+      "overflowAppliedWarning": "The replacement text exceeds the original area. Review the result visually before exporting.",
+      "fallbackFontWarning": "The original font could not be reused and a fallback was used. Review the characters and spacing.",
+      "signatureInvalidatedWarning": "This PDF contained digital signatures. Editing its content invalidates the existing signatures.",
       "redactWarningTitle": "Redaction Mode Active",
       "redactWarningDescription": "Select areas to permanently remove content. Redacted content cannot be recovered after saving.",
       "toolbar": {
