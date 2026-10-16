@@ -40,27 +40,28 @@ export const toolContentEn: Record<string, ToolContent> = {
   },
 
   'merge-pdf': {
-    title: 'Merge PDF',
-    metaDescription: 'Combine multiple PDF files into one document. Free online PDF merger with drag-and-drop reordering.',
-    keywords: ['merge pdf', 'combine pdf', 'join pdf', 'pdf merger', 'concatenate pdf'],
+    title: 'Combine Files & Merge PDF',
+    metaDescription: 'Combine multiple PDF files, images (JPG/PNG), Office documents (Word/Excel/PPT), and text into one unified PDF document. Free online tool with drag-and-drop reordering.',
+    keywords: ['merge pdf', 'combine files', 'combine pdf', 'join pdf', 'images to pdf', 'word to pdf merge', 'pdf merger', 'concatenate pdf'],
     description: `
-      <p>Merge PDF allows you to combine multiple PDF documents into a single file quickly and easily. Whether you're consolidating reports, combining scanned documents, or assembling a presentation, this tool makes the process seamless.</p>
-      <p>Simply upload your files, arrange them in your desired order using drag-and-drop, and merge them into one cohesive document. The tool preserves the quality of your original files and can optionally maintain bookmarks from each source document.</p>
-      <p>All merging happens locally in your browser, ensuring complete privacy for your sensitive documents.</p>
+      <p>Combine Files allows you to merge multiple PDF documents, images (JPG, PNG, WebP, BMP), Office documents (Word, Excel, PowerPoint), and plain text into a single cohesive PDF file quickly and easily. Whether you're consolidating multi-format reports, combining scanned receipts, or assembling presentations, this tool makes the process seamless.</p>
+      <p>Simply upload your files, arrange them in your desired order using drag-and-drop, and merge them into one document. Non-PDF files are automatically converted to high-quality PDF pages on the fly, and bookmarks can optionally be maintained from each source file's name.</p>
+      <p>All conversions and merging happen locally in your browser sandbox, ensuring complete privacy for your sensitive documents without uploading to remote servers.</p>
     `,
     howToUse: [
-      { step: 1, title: 'Upload PDF Files', description: 'Drag and drop multiple PDF files into the upload area, or click to select files from your device.' },
-      { step: 2, title: 'Arrange Order', description: 'Drag and drop the file thumbnails to arrange them in your desired order.' },
-      { step: 3, title: 'Merge and Download', description: 'Click the Merge button to combine all files, then download your merged PDF.' },
+      { step: 1, title: 'Upload Files', description: 'Drag and drop PDFs, images (JPG/PNG), Office documents (Word/Excel/PPT), or text files into the upload area.' },
+      { step: 2, title: 'Arrange Order', description: 'Drag and drop the file cards to arrange them in your desired order. Live thumbnails are previewed for images.' },
+      { step: 3, title: 'Merge and Download', description: 'Click the Merge button to automatically convert and combine all files into a single PDF, then download your result.' },
     ],
     useCases: [
-      { title: 'Combine Reports', description: 'Merge monthly or quarterly reports into a single annual document for easier distribution and archiving.', icon: 'file-text' },
-      { title: 'Assemble Portfolios', description: 'Combine multiple project documents, certificates, or work samples into a professional portfolio.', icon: 'briefcase' },
-      { title: 'Consolidate Invoices', description: 'Merge multiple invoices or receipts into one document for accounting and record-keeping purposes.', icon: 'receipt' },
+      { title: 'Mixed-Media Archiving', description: 'Combine contracts, identification photos, invoice receipts, and memo notes into a complete archive dossier.', icon: 'briefcase' },
+      { title: 'Consolidate Business Reports', description: 'Merge Word analyses, Excel financial tables, and PowerPoint presentation slides into one report deck.', icon: 'file-text' },
+      { title: 'Assemble Portfolios', description: 'Combine multiple design graphics (JPG/PNG) and textual descriptions into a polished professional portfolio.', icon: 'image' },
     ],
     faq: [
-      { question: 'How many PDFs can I merge?', answer: 'You can merge up to 100 PDF files at once, with a total combined size of up to 500MB.' },
-      { question: 'Will the merged PDF maintain the original quality?', answer: 'Yes, the merging process preserves the original quality of all documents without any compression or quality loss.' },
+      { question: 'What file formats can I combine?', answer: 'You can combine standard PDF files, images (JPG, PNG, WebP, BMP, SVG), Office documents (Word .docx/.doc, Excel .xlsx/.xls, PowerPoint .pptx/.ppt), and text files (.txt, .md).' },
+      { question: 'How many files can I merge at once?', answer: 'You can merge up to 100 files at once, with a total combined size of up to 500MB.' },
+      { question: 'Will non-PDF files maintain their visual quality?', answer: 'Yes! Images and documents are rendered at high resolution and fitted to standard pages without lossy compression.' },
       { question: 'Can I merge password-protected PDFs?', answer: 'Password-protected PDFs need to be decrypted first. Use our Decrypt PDF tool to remove the password before merging.' },
     ],
   },
@@ -236,7 +237,7 @@ export const toolContentEn: Record<string, ToolContent> = {
     `,
     howToUse: [
       { step: 1, title: 'Upload Your PDF', description: 'Drag and drop your PDF file or click to select the document you need to sign.' },
-      { step: 2, title: 'Create Your Signature', description: 'Draw your signature with mouse or touch, type your name to generate a signature, or upload a signature image.' },
+      { step: 2, title: 'Create Your Signature', description: 'Draw your signature with mouse or touch, type your name to generate a signature, or upload a signature image. You can also scan a photo of a signature written on paper.' },
       { step: 3, title: 'Place and Adjust', description: 'Click on the document to place your signature, then drag to position and resize as needed.' },
       { step: 4, title: 'Save and Download', description: 'Click Save to apply your signature and download the signed PDF.' },
     ],
@@ -2218,6 +2219,33 @@ export const toolContentEn: Record<string, ToolContent> = {
     ],
   },
 
+  'redact-pdf': {
+    title: 'Redact PDF',
+    metaDescription: 'Visually blackout, mosaic, or blur sensitive information in PDF files. Irreversible physical rasterization and deep metadata sanitization for privacy protection.',
+    keywords: ['redact pdf', 'blackout pdf', 'mosaic pdf', 'blur pdf', 'pdf privacy', 'remove sensitive data', 'secure pdf editor'],
+    description: `
+      <p>Redact PDF provides a visual, interactive editor to permanently conceal and protect sensitive data in your PDF documents. Drag to mark any confidential area—such as names, addresses, ID numbers, signatures, official seals, financial figures, or portraits—and apply blackout, whiteout, mosaic, or blur effects.</p>
+      <p>Unlike standard PDF editors that simply superimpose superficial black rectangles over existing text, this tool performs <strong>irreversible physical pixel rasterization</strong>. The underlying text layers, vector graphics, and OCR streams are completely destroyed and cannot be recovered by copy-pasting or reverse-engineering.</p>
+      <p>Additionally, the tool performs deep metadata wiping, eliminating author information, creation history, and XMP streams. All processing runs 100% locally in your browser with zero server uploads.</p>
+    `,
+    howToUse: [
+      { step: 1, title: 'Upload PDF Document', description: 'Select or drag-and-drop the PDF file you wish to redact.' },
+      { step: 2, title: 'Mark Sensitive Areas', description: 'Click and drag on any page to draw redaction boxes around confidential content.' },
+      { step: 3, title: 'Choose Redaction Style', description: 'Select blackout, whiteout, mosaic (adjustable pixel size), or blur. Toggle real-time preview to inspect the result.' },
+      { step: 4, title: 'Export Secured PDF', description: 'Click "Generate Secured PDF" to execute irreversible flattening, metadata wiping, and download your secured document.' },
+    ],
+    useCases: [
+      { title: 'Privacy & Regulatory Compliance', description: 'Safely mask Personally Identifiable Information (PII) to comply with GDPR, HIPAA, or CCPA requirements.', icon: 'shield' },
+      { title: 'Confidential Legal & Business Sharing', description: 'Obscure trade secrets, settlement terms, signatures, and stamps prior to public disclosure or external distribution.', icon: 'file-text' },
+      { title: 'Financial & Identity Protection', description: 'Conceal bank account numbers, tax IDs, credit card details, and ID card numbers from statements and invoices.', icon: 'lock' },
+    ],
+    faq: [
+      { question: 'Can anyone recover redacted information by copying text or inspecting layers?', answer: 'No. The redacted areas undergo physical pixel burn-in flattening. Underlying text, vectors, and objects are completely removed from the file structure, making recovery impossible.' },
+      { question: 'What is the difference between blackout, mosaic, and blur?', answer: 'Blackout creates a solid black mask (standard for legal documents); whiteout provides a clean white mask; mosaic creates a pixelated grid; and blur produces a soft frosted glass effect.' },
+      { question: 'Are files uploaded to your servers?', answer: 'No. All rendering, redaction, flattening, and PDF generation occur entirely within your browser memory. Your documents never leave your device.' },
+      { question: 'What metadata is removed?', answer: 'Document Title, Author, Subject, Keywords, Creator, Producer, CreationDate, ModDate, and extended XMP metadata streams are thoroughly erased.' },
+    ],
+  },
 
   'decrypt-pdf': {
     title: 'Decrypt PDF',

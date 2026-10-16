@@ -37,28 +37,29 @@ export const toolContentZh: Record<string, ToolContent> = {
   },
 
   'merge-pdf': {
-    title: '合并PDF',
-    metaDescription: '将多个PDF文件合并成一个文档。免费在线PDF合并器，支持拖放重新排序。',
-    keywords: ['合并pdf', '组合pdf', '连接pdf', 'pdf合并器', '拼接pdf'],
+    title: '合并 PDF 与多格式文件',
+    metaDescription: '将多个 PDF、图片（JPG/PNG/WebP）、Office 文档（Word/Excel/PPT）和文本文件快速合并为一个统一的 PDF 文档。免费在线文件合并器，支持拖拽排序与书签保留。',
+    keywords: ['合并pdf', '组合文件', '图片合并为pdf', 'word合并为pdf', 'pdf合并器', '拼接pdf', '多格式合并', 'combine files'],
     description: `
-      <p>合并PDF允许您快速轻松地将多个PDF文档合并成一个文件。无论您是整合报告、合并扫描文档还是组装演示文稿，这个工具都能使过程变得无缝。</p>
-      <p>只需上传文件，使用拖放功能按所需顺序排列，然后将它们合并成一个连贯的文档。该工具保留原始文件的质量，并可选择保留每个源文档的书签。</p>
-      <p>所有合并操作都在您的浏览器本地进行，确保敏感文档的完全隐私。</p>
+      <p>合并工具允许您快速轻松地将多个 PDF 文档、各类图片（JPG、PNG、WebP、BMP 等）、Office 文档（Word、Excel、PowerPoint）以及纯文本文件整合成一个连贯统一的 PDF 文件。无论是汇总商业报告、整合图文资料、合并扫描收据，还是组装汇报幻灯片，都能一站式搞定。</p>
+      <p>只需上传文件，使用拖放功能按所需顺序直观排列，系统会在本地自动将图片与文档转换为高质量 PDF 页面并无缝拼接。该工具完整保留原图画质，并可智能为每个子文件生成目录书签以便于查阅。</p>
+      <p>所有转换与合并操作均在您的浏览器本地沙箱中安全运行，无需上传第三方服务器，确保私密文档绝对安全。</p>
     `,
     howToUse: [
-      { step: 1, title: '上传PDF文件', description: '将多个PDF文件拖放到上传区域，或点击从设备中选择文件。' },
-      { step: 2, title: '排列顺序', description: '拖放文件缩略图以按所需顺序排列。' },
-      { step: 3, title: '合并并下载', description: '点击合并按钮组合所有文件，然后下载合并后的PDF。' },
+      { step: 1, title: '上传多种格式文件', description: '将 PDF、图片（JPG/PNG）、Office 文档（Word/Excel/PPT）或文本文件拖放到上传区域，支持混选添加。' },
+      { step: 2, title: '拖拽排列顺序', description: '通过拖放卡片调整文件先后顺序，图片文件支持实时缩略图预览。' },
+      { step: 3, title: '合并并下载 PDF', description: '点击合并按钮，系统会自动将所有内容转换为页面并组合成单一 PDF，即可立即下载。' },
     ],
     useCases: [
-      { title: '合并报告', description: '将月度或季度报告合并成一个年度文档，便于分发和存档。', icon: 'file-text' },
-      { title: '组装作品集', description: '将多个项目文档、证书或工作样本合并成专业作品集。', icon: 'briefcase' },
-      { title: '整合发票', description: '将多张发票或收据合并成一个文档，用于会计和记录保存。', icon: 'receipt' },
+      { title: '图文混排归档', description: '将 PDF 合同、身份证件图片、收据发票与说明文档一次性整合为一份完整的归档文件。', icon: 'briefcase' },
+      { title: '汇总多格式报告', description: '将 Word 分析报告、Excel 财务表格和 PPT 幻灯片一键拼接进同一个 PDF 便于呈阅。', icon: 'file-text' },
+      { title: '组装设计与作品集', description: '将多张设计效果图（JPG/PNG）与文字说明组合为高规格的作品集 PDF。', icon: 'image' },
     ],
     faq: [
-      { question: '可以合并多少个PDF？', answer: '您可以一次合并最多100个PDF文件，总大小最高可达500MB。' },
-      { question: '合并后的PDF会保持原始质量吗？', answer: '是的，合并过程保留所有文档的原始质量，不会进行任何压缩或质量损失。' },
-      { question: '可以合并受密码保护的PDF吗？', answer: '受密码保护的PDF需要先解密。请使用我们的解密PDF工具在合并前移除密码。' },
+      { question: '支持合并哪些类型的文件？', answer: '支持标准 PDF 文件、常见图片（JPG、PNG、WebP、BMP、SVG 等）、Office 文档（Word .docx/.doc、Excel .xlsx/.xls、PowerPoint .pptx/.ppt）以及纯文本（.txt、.md）。' },
+      { question: '可以合并多少个文件？', answer: '您可以一次合并最多 100 个文件，总大小最高可达 500MB。' },
+      { question: '非 PDF 文件合并后的质量如何？', answer: '系统会按自适应页面和原始高分辨率渲染图片和文档，不进行破坏性压缩，确保打印与阅读清晰度。' },
+      { question: '可以合并受密码保护的 PDF 吗？', answer: '受密码保护的 PDF 需要先解密。请使用我们的解密 PDF 工具在合并前移除密码。' },
     ],
   },
 
@@ -233,7 +234,7 @@ export const toolContentZh: Record<string, ToolContent> = {
     `,
     howToUse: [
       { step: 1, title: '上传PDF文件', description: '拖放您的PDF文件或点击选择需要签名的文档。' },
-      { step: 2, title: '创建签名', description: '用鼠标或触摸绘制签名，输入姓名生成签名，或上传签名图像。' },
+      { step: 2, title: '创建签名', description: '用鼠标或触摸绘制签名，输入姓名生成签名，或上传签名图像。也可以扫描写在纸上的签名照片。' },
       { step: 3, title: '放置和调整', description: '点击文档放置签名，然后拖动定位和调整大小。' },
       { step: 4, title: '保存并下载', description: '点击保存应用签名并下载已签名的PDF。' },
     ],
@@ -2184,6 +2185,33 @@ export const toolContentZh: Record<string, ToolContent> = {
       { question: '可以遮盖图像或扫描文本吗？', answer: '此工具适用于基于文本的PDF。对于扫描文档，您需要使用基于区域的手动遮盖。' },
       { question: '可以自定义遮盖外观吗？', answer: '是的，您可以设置遮盖颜色、添加边框，并可选择包含替换文本如"[已遮盖]"。' },
       { question: '正则表达式搜索如何工作？', answer: '启用"使用正则表达式"以使用正则模式搜索。例如，\\d{4}-\\d{4}-\\d{4}-\\d{4}可查找信用卡号。' },
+    ],
+  },
+  'redact-pdf': {
+    title: 'PDF 涂黑与马赛克脱敏',
+    metaDescription: '可视化对 PDF 进行抹黑遮盖、马赛克打码或高斯模糊。物理像素级不可逆销毁与深度元数据清理，100% 本地离线保障隐私安全。',
+    keywords: ['PDF脱敏', 'PDF抹黑', 'PDF打码', 'PDF马赛克', 'PDF隐私保护', 'PDF涂黑', '安全PDF编辑器'],
+    description: `
+      <p>PDF 涂黑与马赛克脱敏工具为您提供直观的可视化交互编辑能力，帮助您永久遮蔽并清除文档中的各类隐私与涉密信息。只需使用鼠标拖拽框选敏感内容（如身份证号、姓名、住址、公章、签名、财务流水、证件照等），即可应用纯黑遮蔽、白条遮盖、马赛克或高斯模糊效果。</p>
+      <p>与仅在文字上方覆盖矢量矩形的常规工具不同，本工具采用<strong>物理像素级不可逆固化与栅格化技术</strong>，将遮蔽区域直接融合烧录进页面，彻底销毁底层的文字对象、矢量路径与 OCR 文本流，任何人均无法通过复制、文本提取或反编译逆向还原原始内容。</p>
+      <p>同时，工具提供深度元数据清理功能，彻底抹除作者、软件历史指纹与 XMP 扩展流。所有运算均在您的浏览器本地内存中完成，零文件上传，全面满足企业与法务的严苛合规要求。</p>
+    `,
+    howToUse: [
+      { step: 1, title: '上传 PDF 文档', description: '拖拽或点击选择需要进行隐私脱敏的 PDF 文件。' },
+      { step: 2, title: '框选敏感区域', description: '在页面上按住鼠标左键拖拽画出需要遮蔽的区域，支持拖拽手柄缩放调整与移动。' },
+      { step: 3, title: '选择脱敏效果', description: '选择涂黑遮蔽、白条遮盖、马赛克打码（可调颗粒度）或高斯模糊，可随时开启实时预览验证效果。' },
+      { step: 4, title: '生成并下载安全文档', description: '点击“生成脱敏安全 PDF”，系统自动完成物理像素固化与元数据深度清理，即可一键下载。' },
+    ],
+    useCases: [
+      { title: '法规合规与隐私保护', description: '对身份证号、手机号、人脸肖像等敏感个人信息 (PII) 进行合规脱敏，满足数据保护法规。', icon: 'shield' },
+      { title: '涉密与法务公文披露', description: '在向外部共享合同、法务文书或调查报告前，对商业机密、签名公章与调解条款进行永久遮蔽。', icon: 'file-text' },
+      { title: '财务凭证与票据分享', description: '对银行回单、薪资表、发票流水等财务单据中的敏感账号与金额进行安全打码。', icon: 'lock' },
+    ],
+    faq: [
+      { question: '脱敏后的内容能否被复制或技术手段还原？', answer: '绝对无法还原。工具采用了物理不可逆像素栅格化技术，底层的文本图元已被彻底物理抹除，复制文本或使用反编译软件也无法提取任何底层信息。' },
+      { question: '涂黑遮蔽、马赛克与高斯模糊有什么区别？', answer: '涂黑为标准的公文涉密黑框（最严肃正规）；白条遮盖保持页面底色干净；马赛克具有现代化数码打码效果；高斯模糊则带来柔和的毛玻璃磨砂质感。' },
+      { question: '我的文件会被上传到云端服务器吗？', answer: '不会。整个渲染、打码、元数据清理和新文档生成过程 100% 运行在您本地浏览器的内存中，无任何网络上传请求。' },
+      { question: '系统会清理哪些文档元数据？', answer: '包括文档标题 (Title)、作者 (Author)、主题 (Subject)、关键词 (Keywords)、制作者 (Producer)、创建与修改时间，以及 XMP 扩展元数据流。' },
     ],
   },
   'decrypt-pdf': {
