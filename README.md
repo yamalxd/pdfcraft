@@ -13,6 +13,7 @@
 
 <div align="center">
 
+[![LibrePDF Desktop](https://img.shields.io/badge/Desktop_App-LibrePDF-2563eb?style=flat-square&logo=github)](https://github.com/PDFCraftTool/LibrePDF)
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fpdfcraft.devtoolcafe.com%2Fen%2F)](https://pdfcraft.devtoolcafe.com/en/)
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)
@@ -20,6 +21,14 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss)
 
 </div>
+
+> [!TIP]
+> ### 🚀 Discover LibrePDF — Private Desktop PDF Suite
+> Looking for a cross-platform desktop application with zero network telemetry? Check out our sister project:  
+> **[PDFCraftTool/LibrePDF](https://github.com/PDFCraftTool/LibrePDF)**: Open-source, zero-telemetry desktop PDF suite with 53+ tools, direct in-place text editing, offline Ollama AI Copilot, and node-based DAG workflows. A private, subscription-free Acrobat & Stirling-PDF desktop alternative.
+> 
+> * 🔗 **Project Repository**: [https://github.com/PDFCraftTool/LibrePDF](https://github.com/PDFCraftTool/LibrePDF)
+> * ⚖️ **Open-Source License**: [Apache-2.0 License](https://github.com/PDFCraftTool/LibrePDF/blob/main/LICENSE)
 
 ## 📖 About
 
@@ -34,6 +43,19 @@ This project is built with modern web technologies to provide a slick, app-like 
 - **🛠️ Comprehensive Toolset**: Over 80+ tools to handle any PDF task.
 - **🎨 Modern UI**: Clean, accessible, and responsive design built with Tailwind CSS.
 - **🌐 Multi-language**: Supports English, Spanish, French, German, Portuguese, Japanese, Korean, and Chinese.
+
+### Rotating PDFs
+
+Standard right-angle rotations preserve the original document's editable form fields, bookmarks, internal page links, custom page labels, attachments, and title/author metadata. This applies to all-page and selected-page rotations, including pages that already have a rotation. Arbitrary-angle rotation continues to rebuild page content through embedding and does not provide the same preservation guarantees.
+### Editing bookmark destinations
+
+Editing titles or reorganizing existing local page bookmarks preserves their original position, zoom and fit mode, including named destinations. Changing a bookmark's target page explicitly resets its view to the top of the new page. New bookmarks retain the existing page-top default.
+### Editing metadata
+
+Metadata edits preserve fields that were not selected for an update. Disabling automatic modification-date updates retains the existing date; explicitly supplied dates and producer information still take precedence.
+### PDF ZIP archives
+
+The PDFs to ZIP tool keeps every selected document, including files with the same name from different folders. Duplicate names receive a numeric suffix before the extension (for example, `report.pdf` and `report (2).pdf`). Existing input names are reserved, so an original `report (2).pdf` is not overwritten by an automatically renamed file. PDF contents are not modified.
 
 ## 🔄 Workflow Editor (Beta)
 
